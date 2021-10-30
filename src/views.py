@@ -10,11 +10,11 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from wsgiref.util import FileWrapper
 
-from interop.models import UasMission
+from src.interop.models import UasMission
 
-import avoidance.waypoint_system as wps
-from avoidance.models import OrderedRouteWayPoint
-from avoidance.decorators import timed
+import src.waypoint_system as wps
+from src.models import OrderedRouteWayPoint
+from src.decorators import timed
 
 
 @require_http_methods(["GET"])

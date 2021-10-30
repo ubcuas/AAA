@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from avoidance.models import OrderedRouteWayPoint
+from src.models import OrderedRouteWayPoint
 
 # Register your models here.
 class OrderedRouteWayPoint_admin(admin.ModelAdmin):
