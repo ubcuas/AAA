@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-import avoidance.waypoint_system as wps
+import src.waypoint_system as wps
 
 from interop.models import OrderedWayPoint, OrderedBoundaryPoint, Obstacle, GpsPosition
 
@@ -8,7 +8,7 @@ def is_valid_route(waypoints, obstacles, flyzone):
     """Buckle up, this is one expensive test"""
     import shapely.geometry as geom
     import shapely.ops as ops
-    from common.utils.conversions import ll_to_utm
+    from src.utils.conversions import ll_to_utm
 
     wp_tuples = [ll_to_utm(x['longitude'], x['latitude']) for x in waypoints]
     obs = ops.cascaded_union([geom.Point(*ll_to_utm(x.longitude, x.latitude)).buffer(x.cylinder_radius) for x in obstacles])
