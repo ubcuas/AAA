@@ -8,7 +8,7 @@ import shapely.ops as ops
 import networkx as nx
 
 from fiona import collection
-from common.utils.conversions import ll_to_utm, utm_to_ll
+from utils.conversions import ll_to_utm, utm_to_ll
 
 logger = logging.getLogger(__name__)
 
