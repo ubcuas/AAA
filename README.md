@@ -18,3 +18,21 @@
 
 
 ## Installation
+In your local AAA repository, run the following:
+```
+docker build . -t aaa
+```
+
+[Once aaa has been added to DockerHub]
+
+In your local AAA repository, run the following to pull from DockerHub:
+```
+docker pull ubcuas/aaa:latest
+```
+
+The images can also be built locally:
+```
+docker build --tag ubcuas/aaa:latest .
+```
+
+## Usage
