@@ -19,7 +19,7 @@
 ## Installation
 In your local AAA repository, run the following:
 ```
-docker build . -t aaa
+docker build -t aaa .
 ```
 
 [Once aaa has been added to DockerHub]

@@ -11,9 +11,9 @@ class TestAvoidance_Views_route(TestCase):
     """
     fixtures = ['default_mission.json']
 
-    @patch('views.wps.post_process_path')
-    @patch('views.wps.find_path')
-    @patch('views.wps.draw_complete_route')
+    @patch('avoidance.views.wps.post_process_path')
+    @patch('avoidance.views.wps.find_path')
+    @patch('avoidance.views.wps.draw_complete_route')
     def test_route(self, mock_draw_complete_route, mock_find_path, mock_post_process_path):
         mock_find_path.return_value = (None, None)
         mock_post_process_path.return_value = [{'order': 1, 'latitude': 38.142544, 'longitude': -76.434088, 'altitude': 60.96, 'is_generated': False, 'wp_type': "auto_flight", 'delay': 0},
@@ -48,9 +48,9 @@ class TestAvoidance_Views_reroute(TestCase):
     """
     fixtures = ['default_mission.json', 'pre_ordered.json']
 
-    @patch('views.wps.post_process_path')
-    @patch('views.wps.find_path')
-    @patch('views.wps.draw_complete_route')
+    @patch('avoidance.views.wps.post_process_path')
+    @patch('avoidance.views.wps.find_path')
+    @patch('avoidance.views.wps.draw_complete_route')
     def test_get_reroute(self, mock_draw_complete_route, mock_find_path, mock_post_process_path):
         mock_find_path.return_value = (None, None)
         mock_post_process_path.return_value = [{'order': 1, 'latitude': 38.142544, 'longitude': -76.434088, 'altitude': 60.96, 'is_generated': False, 'wp_type': "auto_flight", 'delay': 0},
@@ -119,9 +119,9 @@ class TestAvoidance_Views_files(TestCase):
     """
     fixtures = ['default_mission.json']
 
-    @patch('views.wps.post_process_path')
-    @patch('views.wps.find_path')
-    @patch('views.wps.draw_complete_route')
+    @patch('avoidance.views.wps.post_process_path')
+    @patch('avoidance.views.wps.find_path')
+    @patch('avoidance.views.wps.draw_complete_route')
     def test_route_file(self, mock_draw_complete_route, mock_find_path, mock_post_process_path):
         mock_find_path.return_value = (None, None)
         mock_post_process_path.return_value = [{'order': 1, 'latitude': 38.142544, 'longitude': -76.434088, 'altitude': 60.96, 'is_generated': False, 'wp_type': "auto_flight", 'delay': 0},

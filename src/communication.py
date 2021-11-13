@@ -2,3 +2,4 @@
  
 def UasMission():
 #    GET
+    return 1
