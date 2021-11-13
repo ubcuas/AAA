@@ -13,7 +13,8 @@
 
 
 ## Dependencies
-
+- Docker
+- Docker Compose
 
 
 ## Installation
