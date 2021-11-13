@@ -10,4 +10,4 @@ RUN pip3 install -r src/requirements.txt
 
 COPY src/ ./src/
 
-CMD ["python"]
+CMD ["python", "src/tests/test_avoidance.py"]
