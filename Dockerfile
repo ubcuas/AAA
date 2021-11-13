@@ -1,5 +1,7 @@
 FROM ubcuas/pyuuas:latest
 
+RUN apt-get -qq update && apt-get install -y
+
 RUN mkdir -p /uas/aaa
 WORKDIR /uas/aaa
 
