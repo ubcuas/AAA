@@ -1,35 +1,5 @@
 import utm
 
-def f_2_m(feet_val):
-    """
-    SHORTHAND
-    [param] feet_val - Input (number) value in feet
-    [return] A value converted to meters (float)
-    """
-    return feet_to_meter(feet_val)
-
-def feet_to_meter(feet_val):
-    """
-    [param] feet_val - Input (number) value in feet
-    [return] A value converted to meters (float)
-    """
-    return feet_val * 0.3048
-
-def m_2_f(meter_val):
-    """
-    SHORTHAND
-    [param] metre_val - Input (number) value in meters
-    [return] A value converted to feet (float)
-    """
-    return meter_to_feet(meter_val)
-
-def meter_to_feet(meter_val):
-    """
-    [param] metre_val - Input (number) value in meters
-    [return] A value converted to feet (float)
-    """
-    return meter_val / 0.3048
-
 utm_meta = None
 def ll_to_utm(longitude, latitude):
     """

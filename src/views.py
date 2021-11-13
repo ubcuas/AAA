@@ -10,7 +10,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from wsgiref.util import FileWrapper
 
-from src.interop.models import UasMission
+from communication import UasMission
 
 import src.waypoint_system as wps
 from src.models import OrderedRouteWayPoint
@@ -182,7 +182,7 @@ def _parse_obs_to_points_list(obs_list):
     Takes in a mission object and returns a list with all the obstacles, with the obstacles as a list of points
     """
     import shapely.geometry as geom
-    from common.utils.conversions import ll_to_utm, utm_to_ll
+    from utils.conversions import ll_to_utm, utm_to_ll
 
     new_obstacles = []
     for obs in obs_list:
