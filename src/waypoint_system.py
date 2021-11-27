@@ -45,10 +45,10 @@ def save_mission(waypoints, filename):
             outfile.write(mission_template.format(**point, mptype=mptype))
             no = no + 1
 
-def save_obstacles(obsticales, filename):
+def save_obstacles(obstacles, filename):
     schema = {'geometry': 'Polygon', 'properties': {'name': 'str'}}
     with collection(filename, "w", "ESRI Shapefile", schema) as output:
-        for obs in obsticales:
+        for obs in obstacles:
             shapePoint = geom.Point(obs["longitude"], obs["latitude"])
             output.write({
                 'properties': {
