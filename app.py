@@ -2,7 +2,8 @@
 import json
 from flask import Flask  
 from flask import request
-from flask import jsonify 
+from flask import jsonify
+from flask import json
 
 app = Flask(__name__)  
 
@@ -14,7 +15,7 @@ obstacles = []
 def responseHandler():
     if request.method == 'POST':
         # get the interop data; assuming data is in json, no modifications done?
-        # interop = #do stuff to pase back into objects 
+        # interop = #do stuff to parse back into objects 
         interops[request.interop.id] = request.interop
 
         obs_list = create_obstacle_list()
@@ -32,9 +33,15 @@ def create_obstacle_list():
     obs_list = []
 
     # some obstacle:
-    o = {'Latitude': , 'Longitude': , 'Radius': , 'Height': }
+    o = {'Latitude': 0, 'Longitude': 0, 'Radius': 0, 'Height': 0}
 
-    obs_list.append(o)
+    # Grab the data from the test json file and add it to the objects list
+    with open('test-uas-telem.json') as f:
+        obs_list = json.load(f)
+
+    #obs_list.append(o)
+
+    print(obs_list)
 
     return obs_list
 
