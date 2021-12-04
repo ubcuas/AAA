@@ -11,6 +11,18 @@
  [GCOM-X]
 ```
 
+## Required Object Values
+- Latitude
+- Longitude
+- Radius
+- Height
+
+
+## Future Stuff
+
+## Tickets
+- Make avoidance 3D using the altitude of other aircraft
+- Calculate aircraft speed using average position change
 
 ## Dependencies
 - Docker

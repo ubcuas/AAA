@@ -1,9 +1,0 @@
-coverage==5.3.1
-Django==3.1.5
-Fiona==1.8.18
-model-bakery==1.2.1
-networkx==2.5
-numpy==1.19.5
-requests==2.25.1
-Shapely==1.7.1
-utm==0.7.0
