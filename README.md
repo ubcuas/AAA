@@ -21,6 +21,8 @@
 # Future Stuff
 
 ## Tickets
+- Fetch other aircraft positions from GCOM-X taken from interop
+- Identify which object/aircraft is ours
 - Get GCOM-X to fetch AAA obstacles
 - Get GCOM-X to repeatedly reroute the drones path if the position of other aircraft has changed and may affect our path (base on heading, position, and speed of other aircraft)
 - Calculate aircraft speed using average position change
