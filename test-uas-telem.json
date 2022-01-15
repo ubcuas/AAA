@@ -12,36 +12,45 @@
             "longitude": 0.0,
             "altitude": 0.0,
             "heading": 0.0
-        }
+        },
+        "telemetryId": "1278",
+        "telemetryAgeSec": 1.064382,
+        "telemetryTimestamp": "2019-10-05T20:42:23.643989+00:00"
     },
     {
         "team": {
             "id": 3,
             "username": "testuser",
-            "name": "Team Name",
-            "university": "Team University"
+            "name": "UBCUAS",
+            "university": "Team University 2"
         },
-        "inAir": false,
+        "inAir": true,
         "telemetry": {
             "latitude": 1.0,
             "longitude": 1.0,
             "altitude": 1.0,
             "heading": 1.0
-        }
+        },
+        "telemetryId": "1279",
+        "telemetryAgeSec": 1.064382,
+        "telemetryTimestamp": "2019-10-05T20:42:23.643989+00:00"
     },
     {
         "team": {
             "id": 4,
             "username": "testuser",
-            "name": "Team Name",
+            "name": "Team Name 2",
             "university": "Team University"
         },
-        "inAir": false,
+        "inAir": true,
         "telemetry": {
             "latitude": 2.0,
             "longitude": 2.0,
             "altitude": 2.0,
             "heading": 2.0
-        }
+        },
+        "telemetryId": "1280",
+        "telemetryAgeSec": 1.064382,
+        "telemetryTimestamp": "2019-10-05T20:42:23.643989+00:00"
     }
 ]
