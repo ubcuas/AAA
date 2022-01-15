@@ -18,11 +18,15 @@ def responseHandler():
 
         obs_list = create_obstacle_list(request.data)
 
-        # Check if need to reroute
-        reroute = need_reroute(obs_list)
-
         # Save obstacle list to caching after comparing with previous list
-        obstacles = obs_list
+        obstacles.append(obs_list)
+        obstacles.append(obs_list)
+        #print("Obstacles appended:", obstacles, "\n")
+        if len(obstacles) > 5:
+            obstacles.pop(0)
+
+        # Check if need to reroute
+        reroute = need_reroute(obstacles)
 
         # Flask 1.1.0 a view can directly return a Python dict and Flask will call jsonify automatically
         if reroute:
@@ -42,30 +46,28 @@ def create_obstacle_list(data):
         obs_list = json.load(f)
 
     # Print the list to see that it worked
-    print(obs_list)
+    #print(obs_list)
 
     return obs_list
 
 def need_reroute(obstacles):
     """ check if obstacles have changed enough that we require a reroute"""
 
-    # No reroute needed if it is the first telemtry received
-    if obstacles == None:
-        return False
     # Make a temporary list of active aircraft (other than our own)
     temp_obs = []
+    
+    for drone in obstacles[len(obstacles) - 1]:
+        if drone['inAir'] == True:
+            temp_obs.append(drone)
 
-    print(obstacles)
-    
-    for obs in obstacles:
-        if obs['inAir'] :
-           temp_obs.append(obs)
-    
     print(temp_obs)
 
     # Compare telemetry of our aircraft to others
+    for drone in temp_obs:
+        
+        # call other function which formats objects for gcom
+        obstacles_for_gcom(temp_obs)
 
-    """ returns a boolean"""
     return True
 
 if __name__ == "__main__":
