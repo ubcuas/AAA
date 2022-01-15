@@ -7,7 +7,6 @@ from flask import json
 app = Flask(__name__)
 
 # Obstacle caching
-interops = {}
 obstacles = []
 
 @app.route('/aaa', methods=['GET','POST']) # Only support posting - keeping GET for testing
@@ -17,7 +16,7 @@ def responseHandler():
         # interop = #do stuff to parse back into objects 
         #interops[request.interop.id] = request.interop
 
-        obs_list = create_obstacle_list()
+        obs_list = create_obstacle_list(request.data)
 
         # Check if need to reroute
         reroute = need_reroute(obs_list)
@@ -31,8 +30,12 @@ def responseHandler():
         else:
             return {'reroute': reroute}
 
-def create_obstacle_list():
+def create_obstacle_list(data):
     obs_list = []
+
+    # Code for extracting obstacles from request data
+    if data:
+        obs_list = json.load(data)
 
     # Grab the data from the test json file and add it to the objects list
     with open('test-uas-telem.json') as f:
@@ -52,9 +55,11 @@ def need_reroute(obstacles):
     # Make a temporary list of active aircraft (other than our own)
     temp_obs = []
 
+    print(obstacles)
+    
     for obs in obstacles:
-        if obs.inAir == "true":
-            temp_obs.append(obs)
+        if obs['inAir'] :
+           temp_obs.append(obs)
     
     print(temp_obs)
 
