@@ -1,8 +1,4 @@
-dis
-json
-datetime
-flask
-math
-numpy
-utm
-dateutil.parser
+datetime==4.3
+flask==2.0.2
+numpy==1.22.1
+python-dateutil==2.8.2
