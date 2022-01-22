@@ -5,9 +5,13 @@ from flask import request
 from flask import jsonify
 from flask import json
 from cmath import sqrt
+
+from numpy import true_divide
 from utm import to_latlon, from_latlon
 
 app = Flask(__name__)
+
+BUFFER_TIME = 5
 
 # Obstacle caching (for averaging drone position to get speed)
 obstacles = []
@@ -86,7 +90,7 @@ def need_reroute(obstacles):
         #speed = 
 
         # Call function which formats objects for gcom-x
-        gcom_obs = obstacles_for_gcom(temp_obs)
+        gcom_obs = obstacles_for_gcom(temp_obs, distance)
 
     return True, gcom_obs
 
@@ -112,25 +116,20 @@ def utm_to_ll(x, y):
     global utm_meta
     return reversed(to_latlon(x, y, *utm_meta))
 
-def obstacles_for_gcom(obs):
+def obstacles_for_gcom(obs, radius):
     """ format obstacle for gcom """
-    # values: latitude, longitude, radius, height
-    # buffer radius based on aircraft speed, want 5 second buffer time?
-    buffer_time = 5
-
-    speed = calc_speed(obs) # units?
-
-    radius = speed * buffer_time
-
     ret = {'latitude': obs['telemetry']['latitude'], 'longitude': obs['telemetry']['longitude'], 'radius': radius, 'height':  obs['telemetry']['altitude']}
-
     print(ret)
-
     return ret
 
 def calc_speed(obs):
     return 0
 
+def collision(x1, y1, x2, y2, r1, r2):
+    distance_m = 0 # replace with distance func later
+    if distance_m <= r1 + r2: # within buffer radius / collision zone
+        return True
+    return False
 
 if __name__ == "__main__":
 
