@@ -15,7 +15,7 @@
         },
         "telemetryId": "1278",
         "telemetryAgeSec": 1.064382,
-        "telemetryTimestamp": "2019-10-05T20:42:23.643989+00:00"
+        "telemetryTimestamp": "2019-10-05T20:42:24.643989+00:00"
     },
     {
         "team": {
@@ -26,14 +26,14 @@
         },
         "inAir": true,
         "telemetry": {
-            "latitude": 49.259720,
-            "longitude": -123.251594,
-            "altitude": 100.0,
+            "latitude": 49.260588,
+            "longitude": -123.251809,
+            "altitude": 110.0,
             "heading": 1.0
         },
         "telemetryId": "1279",
         "telemetryAgeSec": 1.064382,
-        "telemetryTimestamp": "2019-10-05T20:42:23.643989+00:00"
+        "telemetryTimestamp": "2019-10-05T20:42:24.643989+00:00"
     },
     {
         "team": {
@@ -44,13 +44,13 @@
         },
         "inAir": true,
         "telemetry": {
-            "latitude": 49.263303,
-            "longitude": -123.241534,
-            "altitude": 150.0,
-            "heading": 260.0
+            "latitude": 49.263219,
+            "longitude": -123.244076,
+            "altitude": 140.0,
+            "heading": 270.0
         },
         "telemetryId": "1280",
         "telemetryAgeSec": 1.064382,
-        "telemetryTimestamp": "2019-10-05T20:42:23.643989+00:00"
+        "telemetryTimestamp": "2019-10-05T20:42:24.643989+00:00"
     }
 ]
