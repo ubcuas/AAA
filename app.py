@@ -46,8 +46,8 @@ def create_obstacle_list(data = None):
 
     # Code for extracting obstacles from request data
     if data is not None:
-        print("getting from gcom")
-        obs_list = json.load(data)
+        print("Getting aircraft telemetry from gcom-x")
+        #obs_list = json.load(data)
 
     # Grab the data from the test json file and add it to the objects list
     with open('test-uas-telem.json') as f:
@@ -73,21 +73,23 @@ def need_reroute(obstacles):
             temp_obs.append(drone)
 
     # Print the list for testing
-    #print("Our drone:", uas_drone)
-    #print("Other aircraft:", temp_obs)
+    #print("Our drone:", uas_drone, "\n")
+    #print("Other aircraft:", temp_obs, "\n")
 
     # Compare telemetry of our aircraft to others
     for drone in temp_obs:
         # Calculate 2D distance from our drone using coordinates
-        long_diff = (drone['telemetry']['longitude'] - uas_drone['telemetry']['longitude'])
-        lat_diff = (drone['telemetry']['latitude'] - uas_drone['telemetry']['latitude'])
-        lat, long = ll_to_utm(long_diff, lat_diff)
-        distance = sqrt((lat) ** 2 + (long) ** 2)
+        lat1, long1 = ll_to_utm(drone['telemetry']['longitude'], drone['telemetry']['latitude'])
+        lat2, long2 = ll_to_utm(uas_drone['telemetry']['longitude'], uas_drone['telemetry']['latitude'])
+
+        long_diff = long2 - long1
+        lat_diff = lat2 - lat1
+
+        # Use formula for distance between two points
+        distance = sqrt((long_diff) ** 2 + (lat_diff) ** 2)
         
         print(distance)
         travelled_m = 0
-        
-        #speed = 
 
         # Call function which formats objects for gcom-x
         gcom_obs = obstacles_for_gcom(temp_obs, distance)
@@ -133,8 +135,4 @@ def collision(x1, y1, x2, y2, r1, r2):
 
 if __name__ == "__main__":
 
-    app.run()
-
-
-list = create_obstacle_list()
-need_reroute(list)
+    app.run(debug=True)
