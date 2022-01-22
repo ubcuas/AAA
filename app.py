@@ -37,11 +37,12 @@ def responseHandler():
         else:
             return {'reroute': reroute}
 
-def create_obstacle_list(data):
+def create_obstacle_list(data = None):
     obs_list = []
 
     # Code for extracting obstacles from request data
-    if data:
+    if data is not None:
+        print("getting from gcom")
         obs_list = json.load(data)
 
     # Grab the data from the test json file and add it to the objects list
@@ -111,6 +112,30 @@ def utm_to_ll(x, y):
     global utm_meta
     return reversed(to_latlon(x, y, *utm_meta))
 
+def obstacles_for_gcom(obs):
+    """ format obstacle for gcom """
+    # values: latitude, longitude, radius, height
+    # buffer radius based on aircraft speed, want 5 second buffer time?
+    buffer_time = 5
+
+    speed = calc_speed(obs) # units?
+
+    radius = speed * buffer_time
+
+    ret = {'latitude': obs['telemetry']['latitude'], 'longitude': obs['telemetry']['longitude'], 'radius': radius, 'height':  obs['telemetry']['altitude']}
+
+    print(ret)
+
+    return ret
+
+def calc_speed(obs):
+    return 0
+
+
 if __name__ == "__main__":
 
     app.run()
+
+
+list = create_obstacle_list()
+need_reroute(list)
