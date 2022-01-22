@@ -20,9 +20,8 @@ obstacles = []
 @app.route('/aaa', methods=['GET','POST']) # Only supports posting - keeping GET for testing
 def responseHandler():
     if request.method == 'GET': # 'POST' for final
-        # Get the interop data; assuming data is in json, no modifications done?
-        # interop = #do stuff to parse back into objects 
-        #interops[request.interop.id] = request.interop
+
+        request.data = None # for manual testing only
 
         obs_list = create_obstacle_list() # add back "request.data"
 
@@ -43,6 +42,7 @@ def responseHandler():
 
         # Check if need to reroute
         reroute, gcom_obs = need_reroute(obstacles)
+
 
         # Flask 1.1.0 a view can directly return a Python dict and Flask will call jsonify automatically
         if reroute:
@@ -76,7 +76,7 @@ def need_reroute(obstacles):
 
     
     # Add only drones that are in the air to the temporary list
-    for drone in obstacles[len(obstacles) - 1]:
+    for drone in obstacles[-1]:
         if drone['team']['name'] == 'UBCUAS':
             uas_drone = drone
         elif drone['inAir'] == True:
