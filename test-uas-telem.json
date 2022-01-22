@@ -26,8 +26,8 @@
         },
         "inAir": true,
         "telemetry": {
-            "latitude": 1.0,
-            "longitude": 1.0,
+            "latitude": 49.259720,
+            "longitude": -123.251594,
             "altitude": 1.0,
             "heading": 1.0
         },
@@ -44,8 +44,8 @@
         },
         "inAir": true,
         "telemetry": {
-            "latitude": 2.0,
-            "longitude": 2.0,
+            "latitude": 49.263303,
+            "longitude": -123.241534,
             "altitude": 2.0,
             "heading": 2.0
         },
