@@ -68,7 +68,7 @@ def need_reroute(obstacles):
 
     
     # Add only drones that are in the air to the temporary list
-    for drone in obstacles[0]:
+    for drone in obstacles[-1]:
         if drone['team']['name'] == 'UBCUAS':
             uas_drone = drone
         elif drone['inAir'] == True:
