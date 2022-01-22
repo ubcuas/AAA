@@ -42,19 +42,18 @@ def responseHandler():
             return {'reroute': reroute}
 
 def create_obstacle_list(data = None):
-    obs_list = []
 
     # Code for extracting obstacles from request data
     if data is not None:
         print("Getting aircraft telemetry from gcom-x")
-        #obs_list = json.load(data)
+        obs_list = json.load(data)
 
     # Grab the data from the test json file and add it to the objects list
     with open('test-uas-telem.json') as f:
         obs_list = json.load(f)
 
     # Print the list to see that it worked
-    #print(obs_list)
+    print(obs_list)
 
     return obs_list
 
@@ -64,9 +63,11 @@ def need_reroute(obstacles):
     # Make a temporary list of active aircraft
     temp_obs = []
     uas_drone = {}
+    gcom_obs = []
+
     
     # Add only drones that are in the air to the temporary list
-    for drone in obstacles[len(obstacles) - 1]:
+    for drone in obstacles:
         if drone['team']['name'] == 'UBCUAS':
             uas_drone = drone
         elif drone['inAir'] == True:
@@ -76,30 +77,28 @@ def need_reroute(obstacles):
     #print("Our drone:", uas_drone, "\n")
     #print("Other aircraft:", temp_obs, "\n")
 
+    x1, y1 = ll_to_utm(uas_drone['telemetry']['longitude'], uas_drone['telemetry']['latitude'])
+    s1 = calc_speed() # TODO: change when func is implemented
+    r1 = s1 * BUFFER_TIME
+
     # Compare telemetry of our aircraft to others
     for drone in temp_obs:
-        # Calculate 2D distance from our drone using coordinates
-        lat1, long1 = ll_to_utm(drone['telemetry']['longitude'], drone['telemetry']['latitude'])
-        lat2, long2 = ll_to_utm(uas_drone['telemetry']['longitude'], uas_drone['telemetry']['latitude'])
-
-        long_diff = long2 - long1
-        lat_diff = lat2 - lat1
-
-        # Use formula for distance between two points
-        distance = sqrt((long_diff) ** 2 + (lat_diff) ** 2)
         
-        print(distance)
+        x2, y2 = ll_to_utm(drone['telemetry']['longitude'], drone['telemetry']['latitude'])
+        s2 = calc_speed() # TODO: change when func is implemented
+        r2 = s2 * BUFFER_TIME
         travelled_m = 0
 
-        # Call function which formats objects for gcom-x
-        gcom_obs = obstacles_for_gcom(temp_obs, distance)
+        # only add to obstacle list if in collision zone
+        if collision(x1, y1, x2, y2, r1, r2):
+            # Call function which formats objects for gcom-x
+            gcom_obs.append(obstacles_for_gcom(temp_obs, r2))
 
     return True, gcom_obs
 
-def obstacles_for_gcom(temp_obs):
-    gcom_obs = []
-
-    return gcom_obs
+#def obstacles_for_gcom(temp_obs):
+#    gcom_obs = []
+#    return gcom_obs
 
 # Code from gcom-x for converting
 utm_meta = None
@@ -125,13 +124,19 @@ def obstacles_for_gcom(obs, radius):
     return ret
 
 def calc_speed(obs):
-    return 0
+    return 1
 
 def collision(x1, y1, x2, y2, r1, r2):
-    distance_m = 0 # replace with distance func later
-    if distance_m <= r1 + r2: # within buffer radius / collision zone
+    """ assumes all arguments have same units """
+    # Calculate 2D distance using coordinates
+    distance = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    print(distance)
+
+    # check if within buffer radius / collision zone
+    if distance <= r1 + r2: 
         return True
     return False
+
 
 if __name__ == "__main__":
 
