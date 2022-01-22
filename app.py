@@ -34,11 +34,12 @@ def responseHandler():
         else:
             return {'reroute': reroute}
 
-def create_obstacle_list(data):
+def create_obstacle_list(data = None):
     obs_list = []
 
     # Code for extracting obstacles from request data
-    if data:
+    if data is not None:
+        print("getting from gcom")
         obs_list = json.load(data)
 
     # Grab the data from the test json file and add it to the objects list
@@ -56,7 +57,7 @@ def need_reroute(obstacles):
     # Make a temporary list of active aircraft (other than our own)
     temp_obs = []
     
-    for drone in obstacles[len(obstacles) - 1]:
+    for drone in obstacles:
         if drone['inAir'] == True:
             temp_obs.append(drone)
 
@@ -66,10 +67,34 @@ def need_reroute(obstacles):
     for drone in temp_obs:
         
         # call other function which formats objects for gcom
-        obstacles_for_gcom(temp_obs)
+        obstacles_for_gcom(drone)
 
     return True
+
+def obstacles_for_gcom(obs):
+    """ format obstacle for gcom """
+    # values: latitude, longitude, radius, height
+    # buffer radius based on aircraft speed, want 5 second buffer time?
+    buffer_time = 5
+
+    speed = calc_speed(obs) # units?
+
+    radius = speed * buffer_time
+
+    ret = {'latitude': obs['telemetry']['latitude'], 'longitude': obs['telemetry']['longitude'], 'radius': radius, 'height':  obs['telemetry']['altitude']}
+
+    print(ret)
+
+    return ret
+
+def calc_speed(obs):
+    return 0
+
 
 if __name__ == "__main__":
 
     app.run()
+
+
+list = create_obstacle_list()
+need_reroute(list)
