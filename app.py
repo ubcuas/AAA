@@ -4,7 +4,7 @@ from flask import Flask
 from flask import request
 from flask import jsonify
 from flask import json
-from cmath import sqrt
+from math import sqrt
 
 from numpy import true_divide
 from utm import to_latlon, from_latlon
@@ -78,14 +78,14 @@ def need_reroute(obstacles):
     #print("Other aircraft:", temp_obs, "\n")
 
     x1, y1 = ll_to_utm(uas_drone['telemetry']['longitude'], uas_drone['telemetry']['latitude'])
-    s1 = calc_speed() # TODO: change when func is implemented
+    s1 = calc_speed(None) # TODO: change when func is implemented
     r1 = s1 * BUFFER_TIME
 
     # Compare telemetry of our aircraft to others
     for drone in temp_obs:
         
         x2, y2 = ll_to_utm(drone['telemetry']['longitude'], drone['telemetry']['latitude'])
-        s2 = calc_speed() # TODO: change when func is implemented
+        s2 = calc_speed(None) # TODO: change when func is implemented
         r2 = s2 * BUFFER_TIME
         travelled_m = 0
 
@@ -129,11 +129,12 @@ def calc_speed(obs):
 def collision(x1, y1, x2, y2, r1, r2):
     """ assumes all arguments have same units """
     # Calculate 2D distance using coordinates
-    distance = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+
+    distance = sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2))
     print(distance)
 
     # check if within buffer radius / collision zone
-    if distance <= r1 + r2: 
+    if distance <= (r1 + r2): 
         return True
     return False
 
