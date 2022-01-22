@@ -1,12 +1,13 @@
 from dis import dis
 import json
+import datetime
+#from turtle import speed
 from flask import Flask
 from flask import request
 from flask import jsonify
 from flask import json
 from cmath import sqrt
-
-from numpy import true_divide
+#from numpy import true_divide
 from utm import to_latlon, from_latlon
 
 app = Flask(__name__)
@@ -91,15 +92,17 @@ def need_reroute(obstacles):
         print(distance)
         travelled_m = 0
 
+        calc_speed(drone)
+
         # Call function which formats objects for gcom-x
         gcom_obs = obstacles_for_gcom(temp_obs, distance)
 
     return True, gcom_obs
 
-def obstacles_for_gcom(temp_obs):
+def obstacles_for_gcom(temp_obs, distance):
     gcom_obs = []
 
-    return gcom_obs
+    return True, gcom_obs
 
 # Code from gcom-x for converting
 utm_meta = None
@@ -118,14 +121,51 @@ def utm_to_ll(x, y):
     global utm_meta
     return reversed(to_latlon(x, y, *utm_meta))
 
-def obstacles_for_gcom(obs, radius):
+def obstacles_for_gcomx(obs, radius):
     """ format obstacle for gcom """
     ret = {'latitude': obs['telemetry']['latitude'], 'longitude': obs['telemetry']['longitude'], 'radius': radius, 'height':  obs['telemetry']['altitude']}
     print(ret)
     return ret
 
 def calc_speed(obs):
-    return 0
+    lat_history = []
+    long_history = []
+    timestamp_history = []
+    total_distance = 0
+    time_elapsed = 0
+    heading = 0
+    drone_speed = 0
+
+    # Look through the obstacle caching and find total displacement as well as time passed
+    for set in obstacles:
+        for drone in set:
+            if drone['team']['name'] == obs['team']['name']:
+                # If no heading saved then save the first one
+                if len(lat_history) == 0:
+                    heading = drone['telemetry']['heading']
+                # Check that the drone heading hasn't changed too much (rapid change in direction)
+                if (abs(heading - drone['telemetry']['heading']) > 70):
+                    lat_history = []
+                    long_history = []
+                    timestamp_history = []
+
+                heading = drone['telemetry']['heading']
+
+                lat, long = ll_to_utm(drone['telemetry']['longitude'], drone['telemetry']['latitude'])
+                lat_history.append(lat)
+                long_history.append(long)
+
+                timestamp_history.append(drone['telemetryTimestamp'])
+
+                break
+
+    # Calculate total distance travelled
+    for i in range(1, len(lat_history)):
+        total_distance += sqrt((lat_history[i] - lat_history[i - 1]) ** 2 + (long_history[i] - long_history[i - 1]) ** 2)
+
+    # Calculate total time elapsed
+
+    return drone_speed
 
 def collision(x1, y1, x2, y2, r1, r2):
     distance_m = 0 # replace with distance func later
