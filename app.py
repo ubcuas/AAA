@@ -17,7 +17,7 @@ BUFFER_TIME = 5
 # Obstacle caching (for averaging drone position to get speed)
 obstacles = []
 
-@app.route('/aaa', methods=['GET','POST']) # Only supports posting - keeping GET for testing
+@app.route('/', methods=['GET','POST']) # Only supports posting - keeping GET for testing
 def responseHandler():
     if request.method == 'GET': # 'POST' for final
 
@@ -71,7 +71,9 @@ def need_reroute(obstacles):
 
     # Make a temporary list of active aircraft
     temp_obs = []
+    # Data for our drone
     uas_drone = {}
+    # Obstacles to return to gcom-x
     gcom_obs = []
 
     
@@ -87,14 +89,14 @@ def need_reroute(obstacles):
     #print("Other aircraft:", temp_obs, "\n")
 
     x1, y1 = ll_to_utm(uas_drone['telemetry']['longitude'], uas_drone['telemetry']['latitude'])
-    s1 = calc_speed(uas_drone) # TODO: change when func is implemented
+    s1 = calc_speed(uas_drone)
     r1 = s1 * BUFFER_TIME
 
     # Compare telemetry of our aircraft to others
     for drone in temp_obs:
         
         x2, y2 = ll_to_utm(drone['telemetry']['longitude'], drone['telemetry']['latitude'])
-        s2 = calc_speed(drone) # TODO: change when func is implemented
+        s2 = calc_speed(drone)
         r2 = s2 * BUFFER_TIME
 
         # only add to obstacle list if in collision zone
@@ -124,7 +126,7 @@ def utm_to_ll(x, y):
 def obstacles_for_gcom(obs, radius):
     """ format obstacle for gcom """
     ret = {'latitude': obs['telemetry']['latitude'], 'longitude': obs['telemetry']['longitude'], 'radius': radius, 'height': obs['telemetry']['altitude']}
-    print(ret)
+    print(ret, "\n")
     return ret
 
 def calc_speed(obs):
@@ -162,7 +164,7 @@ def calc_speed(obs):
     # Calculate total distance travelled
     for i in range(1, len(lat_history)):
         total_distance += sqrt((lat_history[i] - lat_history[i - 1]) ** 2 + (long_history[i] - long_history[i - 1]) ** 2)
-        print("Total distance: ", total_distance)
+        print("Total distance (", obs['team']['name'],"):", total_distance)
 
     # Calculate total time elapsed
     for i in range(1, len(timestamp_history)):
@@ -176,7 +178,7 @@ def calc_speed(obs):
     if time_elapsed != 0:
         drone_speed = total_distance / time_elapsed
     
-    print("Drone speed:", drone_speed)
+    print("Drone speed:", drone_speed, "\n")
 
     return drone_speed
 
@@ -195,4 +197,4 @@ def collision(x1, y1, x2, y2, r1, r2):
 
 if __name__ == "__main__":
 
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
