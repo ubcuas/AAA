@@ -13,6 +13,7 @@ import dateutil.parser
 app = Flask(__name__)
 
 BUFFER_TIME = 5
+UAS_team_id = 3 # TODO get our ID with data from gcom-x
 
 # Obstacle caching (for averaging drone position to get speed)
 obstacles = []
@@ -79,7 +80,7 @@ def need_reroute(obstacles):
     
     # Add only drones that are in the air to the temporary list
     for drone in obstacles[-1]:
-        if drone['team']['name'] == 'UBCUAS':
+        if drone['team']['id'] == UAS_team_id:
             uas_drone = drone
         elif drone['inAir'] == True:
             temp_obs.append(drone)
@@ -141,7 +142,7 @@ def calc_speed(obs):
     # Look through the obstacle caching and find total displacement as well as time passed
     for set in obstacles:
         for drone in set:
-            if drone['team']['name'] == obs['team']['name']:
+            if drone['team']['id'] == obs['team']['id']:
                 # If no heading saved then save the first one
                 if len(lat_history) == 0:
                     heading = drone['telemetry']['heading']
