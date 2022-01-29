@@ -8,7 +8,7 @@ WORKDIR /uas/aaa
 COPY requirements.txt ./
 RUN pip3 install -U -r requirements.txt
 
-COPY app.py ./
+COPY . ./
 
 EXPOSE 5000
 
