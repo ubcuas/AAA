@@ -1,6 +1,24 @@
 [
     {
         "team": {
+            "id": 1,
+            "username": "testuser",
+            "name": "Team 1",
+            "university": "Team University"
+        },
+        "inAir": true,
+        "telemetry": {
+            "latitude": 49.263031,
+            "longitude": -123.252617,
+            "altitude": 10.0,
+            "heading": 0.0
+        },
+        "telemetryId": "1278",
+        "telemetryAgeSec": 1.064382,
+        "telemetryTimestamp": "2019-10-05T20:42:24.243989+00:00"
+    },
+    {
+        "team": {
             "id": 2,
             "username": "testuser",
             "name": "Team Name",
@@ -33,13 +51,13 @@
         },
         "telemetryId": "1279",
         "telemetryAgeSec": 1.064382,
-        "telemetryTimestamp": "2019-10-05T20:42:24.643989+00:00"
+        "telemetryTimestamp": "2019-10-05T20:42:25.143989+00:00"
     },
     {
         "team": {
             "id": 4,
             "username": "testuser",
-            "name": "Team Name 2",
+            "name": "Team 2",
             "university": "Team University"
         },
         "inAir": true,
@@ -51,6 +69,6 @@
         },
         "telemetryId": "1280",
         "telemetryAgeSec": 1.064382,
-        "telemetryTimestamp": "2019-10-05T20:42:24.643989+00:00"
+        "telemetryTimestamp": "2019-10-05T20:42:24.943989+00:00"
     }
 ]
