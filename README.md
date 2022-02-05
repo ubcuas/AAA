@@ -18,16 +18,6 @@
 - Height
 
 
-## Tickets
-- Fetch other aircraft positions from GCOM-X taken from interop
-- Get GCOM-X to fetch AAA obstacles
-- Get GCOM-X to repeatedly reroute the drones path if the position of other aircraft has changed and may affect our path (base on heading, position, and speed of other aircraft)
-
-
-## Future Modifications
-- Make avoidance 3D using the altitude of other aircraft
-
-
 ## Dependencies
 - Docker
 

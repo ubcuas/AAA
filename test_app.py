@@ -7,4 +7,3 @@ def client():
     client = create_app()
 
     yield client
-

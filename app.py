@@ -6,13 +6,16 @@ from flask import request
 from flask import jsonify
 from flask import json
 from math import sqrt
-from numpy import true_divide
+from numpy import False_, true_divide
 from utm import to_latlon, from_latlon
 import dateutil.parser
 
+# Run using flask
 app = Flask(__name__)
 
+# Seconds of buffer
 BUFFER_TIME = 5
+# Our drone ID; necessary for identification of our drone
 UAS_team_id = 3 # TODO get our ID with data from gcom-x
 
 # Obstacle caching (for averaging drone position to get speed)
@@ -37,11 +40,11 @@ def responseHandler():
         print(obstacles)
         ### Testing code ends here
 
-        # Remove the first cached entry if the size is greater than 5
+        # Remove the first cached entry if the cache size is greater than 5
         if len(obstacles) > 5:
             obstacles.pop(0)
 
-        # Check if need to reroute
+        # Check if reroute is needed
         reroute, gcom_obs = need_reroute(obstacles)
 
 
@@ -52,6 +55,7 @@ def responseHandler():
             return {'reroute': reroute}
 
 def create_obstacle_list(): # add back "data = None"
+    """Parse input json data into a list"""
 
     # Code for extracting obstacles from request data
     '''if data is not None:
@@ -72,14 +76,17 @@ def need_reroute(obstacles):
 
     # Make a temporary list of active aircraft
     temp_obs = []
-    # Data for our drone
+    # Data for our drone (UBCUAS)
     uas_drone = {}
     # Obstacles to return to gcom-x
     gcom_obs = []
+    # Status of any collisions
+    collisions = False
 
     
-    # Add only drones that are in the air to the temporary list
+    # Add only drones that are in the air to the temporary list by checking the latest cache entry (obstacles[-1])
     for drone in obstacles[-1]:
+        # Save our drone data separately when found
         if drone['team']['id'] == UAS_team_id:
             uas_drone = drone
         elif drone['inAir'] == True:
@@ -89,23 +96,28 @@ def need_reroute(obstacles):
     #print("Our drone:", uas_drone, "\n")
     #print("Other aircraft:", temp_obs, "\n")
 
+    # Convert latitude and longitude to utm for calculations later
     x1, y1 = ll_to_utm(uas_drone['telemetry']['longitude'], uas_drone['telemetry']['latitude'])
+    # Get our drone speed
     s1 = calc_speed(uas_drone)
+    # Create a radius based on the buffer and drone speed
     r1 = s1 * BUFFER_TIME
 
     # Compare telemetry of our aircraft to others
     for drone in temp_obs:
         
+        # Same as above but for each of the other active aircraft
         x2, y2 = ll_to_utm(drone['telemetry']['longitude'], drone['telemetry']['latitude'])
         s2 = calc_speed(drone)
         r2 = s2 * BUFFER_TIME
 
-        # only add to obstacle list if in collision zone
+        # Only add to obstacle list if in collision zone
         if collision(x1, y1, x2, y2, r1, r2):
             # Call function which formats objects for gcom-x
             gcom_obs.append(obstacles_for_gcom(drone, r2))
+            collisions = True
 
-    return True, gcom_obs
+    return collisions, gcom_obs
 
 # Code from gcom-x for converting
 utm_meta = None
@@ -117,31 +129,26 @@ def ll_to_utm(longitude, latitude):
     utm_meta = from_latlon(latitude, longitude)[2:]
     return from_latlon(latitude, longitude)[:2]
 
-def utm_to_ll(x, y):
-    """
-    Converts a utm coordinate to latitude and longitude
-    """
-    global utm_meta
-    return reversed(to_latlon(x, y, *utm_meta))
-
 def obstacles_for_gcom(obs, radius):
-    """ format obstacle for gcom """
+    """ Format obstacle for gcom """
     ret = {'latitude': obs['telemetry']['latitude'], 'longitude': obs['telemetry']['longitude'], 'radius': radius, 'height': obs['telemetry']['altitude']}
     print(ret, "\n")
     return ret
 
 def calc_speed(obs):
+    # History lists
     lat_history = []
     long_history = []
     timestamp_history = []
     total_distance = 0
     time_elapsed = 0
-    heading = 0
+    heading = 0 # Drone direction
     drone_speed = 0
 
     # Look through the obstacle caching and find total displacement as well as time passed
     for set in obstacles:
         for drone in set:
+            # Check if the drone passed to the function matches the drone in the list
             if drone['team']['id'] == obs['team']['id']:
                 # If no heading saved then save the first one
                 if len(lat_history) == 0:
@@ -154,6 +161,7 @@ def calc_speed(obs):
 
                 heading = drone['telemetry']['heading']
 
+                # Convert cooridnates again and add to history lists
                 lat, long = ll_to_utm(drone['telemetry']['longitude'], drone['telemetry']['latitude'])
                 lat_history.append(lat)
                 long_history.append(long)
@@ -164,6 +172,7 @@ def calc_speed(obs):
 
     # Calculate total distance travelled
     for i in range(1, len(lat_history)):
+        # Calculate distance using current and previous data point and add to total distance
         total_distance += sqrt((lat_history[i] - lat_history[i - 1]) ** 2 + (long_history[i] - long_history[i - 1]) ** 2)
         print("Total distance (", obs['team']['name'],"):", total_distance)
 
@@ -172,6 +181,7 @@ def calc_speed(obs):
         time1 = dateutil.parser.isoparse(timestamp_history[i - 1])
         time2 = dateutil.parser.isoparse(timestamp_history[i])
 
+        # Convert timestampt time to usable number and calculate total time
         time_elapsed += (time2-time1).total_seconds()
         print("Time elapsed: ", time_elapsed)
     
@@ -184,13 +194,13 @@ def calc_speed(obs):
     return drone_speed
 
 def collision(x1, y1, x2, y2, r1, r2):
-    """ assumes all arguments have same units """
-    # Calculate 2D distance using coordinates
+    """Calculate 2D distance using coordinates"""
+    # *Assumes all arguments have same units*
 
     distance = sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2))
     print("Distance between: ", distance)
 
-    # check if within buffer radius / collision zone
+    # Check if within buffer radius / collision zone
     if distance <= (r1 + r2): 
         return True
     return False
