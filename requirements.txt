@@ -3,3 +3,4 @@ flask==2.0.2
 numpy==1.22.1
 python-dateutil==2.8.2
 pytest==6.2.5
+utm==0.7.0
