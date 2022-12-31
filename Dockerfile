@@ -5,11 +5,11 @@ RUN apt-get -qq update && apt-get install -y
 RUN mkdir -p /uas/aaa
 WORKDIR /uas/aaa
 
-COPY src/requirements.txt ./src/
-RUN pip3 install -r src/requirements.txt
+COPY requirements.txt ./
+RUN pip3 install -U -r requirements.txt
 
-COPY src/ ./src/
+COPY . ./
 
 EXPOSE 5000
 
-CMD ["python", "src/tests/test_avoidance.py"]
+CMD ["python", "app.py"]
